@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prediction History</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-title">🎓 Student Performance Predictor</div>
+        <div class="nav-links">
+            <a href="{{ url_for('home') }}">Home</a>
+            <a href="{{ url_for('history') }}">History</a>
+        </div>
+    </nav>
+
+    <main class="container">
+        <h1>Prediction History</h1>
+
+        {% if rows|length == 0 %}
+            <p class="empty-msg">No predictions have been made yet. <a href="{{ url_for('home') }}">Make one now</a>.</p>
+        {% else %}
+        <div class="table-wrapper">
+            <table class="history-table">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Study Hours</th>
+                        <th>Absences</th>
+                        <th>Failures</th>
+                        <th>G1</th>
+                        <th>G2</th>
+                        <th>Prediction</th>
+                        <th>Confidence</th>
+                        <th>Date / Time</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in rows %}
+                    <tr>
+                        <td>{{ row['id'] }}</td>
+                        <td>{{ row['study_hours'] }}</td>
+                        <td>{{ row['absences'] }}</td>
+                        <td>{{ row['failures'] }}</td>
+                        <td>{{ row['g1'] }}</td>
+                        <td>{{ row['g2'] }}</td>
+                        <td>
+                            <span class="badge-small {{ 'pass' if row['prediction'] == 'Pass' else 'fail' }}">
+                                {{ row['prediction'] }}
+                            </span>
+                        </td>
+                        <td>{{ row['confidence'] }}%</td>
+                        <td>{{ row['created_at'] }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% endif %}
+    </main>
+
+    <footer>
+        <p>Built with Flask + scikit-learn + SQLite &mdash; Student Performance Prediction System</p>
+    </footer>
+</body>
+</html>
