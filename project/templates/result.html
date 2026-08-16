@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prediction Result</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-title">🎓 Student Performance Predictor</div>
+        <div class="nav-links">
+            <a href="{{ url_for('home') }}">Home</a>
+            <a href="{{ url_for('history') }}">History</a>
+        </div>
+    </nav>
+
+    <main class="container">
+        <section class="result-card {{ 'pass' if record.prediction == 'Pass' else 'fail' }}">
+            <h1>
+                Prediction:
+                <span class="badge {{ 'pass' if record.prediction == 'Pass' else 'fail' }}">
+                    {{ record.prediction }}
+                </span>
+            </h1>
+            <p class="confidence">Model confidence: <strong>{{ record.confidence }}%</strong></p>
+
+            <p class="explanation">
+                {% if record.prediction == 'Pass' %}
+                    Based on the entered study habits, attendance and past marks,
+                    the model predicts this student is likely to <strong>pass</strong>
+                    (final grade &ge; 10/20).
+                {% else %}
+                    Based on the entered study habits, attendance and past marks,
+                    the model predicts this student is at risk of <strong>failing</strong>
+                    (final grade &lt; 10/20). Extra support such as additional study
+                    time or attendance improvement may help.
+                {% endif %}
+            </p>
+
+            <h3>Submitted Details</h3>
+            <table class="details-table">
+                <tr><td>Weekly Study Hours</td><td>{{ record.study_hours_label }}</td></tr>
+                <tr><td>Absences</td><td>{{ record.absences }}</td></tr>
+                <tr><td>Past Class Failures</td><td>{{ record.failures }}</td></tr>
+                <tr><td>Previous Marks (G1)</td><td>{{ record.g1 }} / 20</td></tr>
+                <tr><td>Internal Marks (G2)</td><td>{{ record.g2 }} / 20</td></tr>
+            </table>
+
+            <div class="actions">
+                <a href="{{ url_for('home') }}" class="btn-secondary">Make Another Prediction</a>
+                <a href="{{ url_for('history') }}" class="btn-secondary">View History</a>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>Built with Flask + scikit-learn + SQLite &mdash; Student Performance Prediction System</p>
+    </footer>
+</body>
+</html>
